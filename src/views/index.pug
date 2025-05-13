@@ -1,0 +1,46 @@
+doctype html
+html
+  head
+    title Mon Dashboard
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='./css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  body(class="bg-dark text-white")
+    .d-flex
+      // Sidebar
+      .d-flex.flex-column.flex-shrink-0.p-3.bg-dark.text-white(style="width: 250px; height: 100vh;")
+        h4.text-white MonApp
+        hr.mb-4
+        ul.nav.nav-pills.flex-column.mb-auto
+          li.nav-item
+            a.nav-link.text-white.active(href='#') Anomalies
+          li.nav-item
+            a.nav-link.text-white(href='#') Abonnements
+          li.nav-item
+            a.nav-link.text-white(href='#') Transactions
+        p.mt-auto.small.text-center Made with ☕ & ❤️
+
+      // Main content
+      .flex-grow-1.p-4
+        .d-flex.justify-content-between.align-items-center.mb-4
+          h1 Accueil
+          div.d-flex
+            span.me-3 #{user.global_name}
+            .dropdown
+              img.rounded-circle(
+                src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
+                width='40',
+                height='40',
+                role='button',
+                data-bs-toggle='dropdown',
+                aria-expanded='false'
+              )
+              ul.dropdown-menu.dropdown-menu-end
+                li
+                  a.dropdown-item(href='/logout') Se déconnecter
+
+        h2 Bienvenue sur ton dashboard !
+        p Voici le contenu personnalisé après connexion.
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js')
