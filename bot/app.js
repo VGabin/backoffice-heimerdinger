@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
-import { giveRole, removeRoles, checkRoles } from "./app/roles.js";
+import { giveRole, removeRoles, onJoin, checkRoles } from "./app/roles.js";
 import 'dotenv/config';
 import { nodeCron as cron } from 'node-cron'
 
@@ -50,8 +50,8 @@ client.once('ready', () => {
   // });
 });
 
-client.on('guildMemberAdd', (member) => {  
-  giveRole(member);
+client.on('guildMemberAdd', async (member) => {  
+    await onJoin(member);
 });
 
 // Event : réponse à la commande slash

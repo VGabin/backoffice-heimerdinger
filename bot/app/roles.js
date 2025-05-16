@@ -1,9 +1,24 @@
+const onJoin = async (user) => {
+    try {
+        const joiningUser = user.user.username;
+        const url = 'https://workshop.ceticy.fr/api/join?discordId=' + joiningUser;
+        const response = await fetch(url);
+        if (!response.ok) {
+        throw new Error('Erreur HTTP: ' + response.status);
+        }
+        const data = await response.json();
+        console.log('Données reçues :', data);
+    } catch (error) {
+        console.error('Erreur :', error);
+    }
+}
+
 const giveRole = (user) => {
     try {
         const userRoles = user.roles.cache.map(role => role.name);
     
         // A remplacer le string quand on pourra récupérer l'info
-        const wantedRole = user.guild.roles.cache.find(r => r.name === "basique");;
+        const wantedRole = user.guild.roles.cache.find(r => r.name === "basique");
     
         if (!userRoles.includes(wantedRole)) {
             user.roles.add(wantedRole);
@@ -79,4 +94,4 @@ const checkRoles = async (client) => {
     }
 }
 
-export { giveRole, removeRoles, checkRoles };
+export { giveRole, removeRoles, onJoin, checkRoles };
