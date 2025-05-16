@@ -45,6 +45,19 @@ services:
       - ./web/:/usr/src/app
     command: >
       sh -c "npm install && npm run dev"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`workshop.ceticy.fr`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls=true"
+      - "traefik.http.routers.web.tls.certresolver=myresolver"
+      - "traefik.http.services.web.loadbalancer.server.port=80"
+    networks:
+      - node-ceticy_default
+
+networks:
+  node-ceticy_default:
+    external: true
 
 volumes:
   mysql-data:
