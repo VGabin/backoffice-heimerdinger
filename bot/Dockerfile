@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exposer le port si nécessaire (si ton bot utilise un serveur web comme Express)
-EXPOSE 3000
+EXPOSE 3001
 
 # Lancer l'application
 CMD ["node", "app.js"]

@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
-import { giveRole, removeRole, checkRoles } from "./app/roles.js";
+import { giveRole, removeRoles, checkRoles } from "./app/roles.js";
 import 'dotenv/config';
 import { nodeCron as cron } from 'node-cron'
 
@@ -17,6 +17,10 @@ const commands = [
   new SlashCommandBuilder()
     .setName('test')
     .setDescription('Répond avec un emoji !')
+    .toJSON(),
+  new SlashCommandBuilder()
+    .setName('refresh')
+    .setDescription('Actualise manuellement les rôles.')
     .toJSON(),
 ];
 
@@ -39,28 +43,11 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 client.once('ready', () => {
   console.log(`✅ Connecté en tant que ${client.user.tag}`);
 
-  cron.schedule('* * * * *', async () => {
-    console.log("🕒 Cron lancé : vérification des rôles sur tous les serveurs.");
+  // cron.schedule('* * * * *', async () => {
+  //   console.log("🕒 Cron lancé : vérification des rôles sur tous les serveurs.");
 
-    for (const [guildId, guild] of client.guilds.cache) {
-        console.log(`🔍 Vérification dans le serveur : ${guild.name}`);
-
-        try {
-            // Récupère tous les membres du serveur
-            await guild.members.fetch();
-
-            guild.members.cache.forEach(member => {
-                checkRoles(client, member);
-                
-                // Exemple : afficher les rôles
-                // const roleNames = member.roles.cache.map(role => role.name).join(', ');
-            });
-
-        } catch (error) {
-            console.error(`❌ Erreur dans le serveur ${guild.name} :`, error);
-        }
-    }
-  });
+  //   await checkRoles(client);
+  // });
 });
 
 client.on('guildMemberAdd', (member) => {  
@@ -76,6 +63,12 @@ client.on('interactionCreate', async interaction => {
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 
     await interaction.reply(`Hello world ${randomEmoji}`);
+  }
+
+  if (interaction.commandName === 'refresh') {
+    await checkRoles(client);
+
+    await interaction.reply(`Rôles mis à jour`);
   }
 });
 
