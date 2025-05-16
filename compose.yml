@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: botdb
+      MYSQL_USER: botuser
+      MYSQL_PASSWORD: botpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  pma:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: botuser
+      PMA_PASSWORD: botpass
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"       # Queue
+      - "15672:15672"     # UI management
+
+  web:
+    image: node:18
+    depends_on:
+      - mysql
+      - rabbitmq
+    ports:
+      - "3000:3000"
+    working_dir: /usr/src/app
+    env_file:
+      - .env
+    volumes:
+      - ./web/:/usr/src/app
+    command: >
+      sh -c "npm install && npm run dev"
+
+volumes:
+  mysql-data:
