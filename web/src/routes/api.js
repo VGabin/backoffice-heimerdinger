@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
-const { savePayment } = require("../services/payments");
+const { savePayment, findLatestPaymentByDiscordId } = require("../services/payments");
+const { getRoleFromAmount } = require("../utils/data");
 
 // Webhook Stripe on payment success
 router.post(
@@ -40,6 +41,25 @@ router.post(
 );
 
 // TODO : Route on Join
+router.get("/join", async (req, res) => {
+  const { discordId } = req.query;
+
+  if (!discordId) {
+    return res.status(400).json({ error: "Discord ID is required" });
+  }
+
+  try {
+    const dbPayment = await findLatestPaymentByDiscordId(discordId);
+
+    if (dbPayment) {
+      const role = getRoleFromAmount(dbPayment.amount);
+      return res.status(200).json({ role });
+    }
+    return res.status(404).json({ error: "No valid payment found" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 // TODO : Route on Schedule
 
