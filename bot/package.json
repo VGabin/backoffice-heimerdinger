@@ -1,28 +1,22 @@
 {
-  "name": "discord-getting-started",
-  "private": true,
+  "name": "bot-ava",
   "version": "1.0.0",
-  "description": "Discord example app",
+  "description": "",
   "main": "app.js",
-  "type": "module",
-  "engines": {
-    "node": ">=18.x"
-  },
   "scripts": {
-    "start": "node app.js",
     "register": "node commands.js",
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "author": "Shay DeWael",
-  "license": "MIT",
+  "keywords": [],
+  "author": "Heimerdinger",
+  "license": "ISC",
   "dependencies": {
-    "discord-interactions": "^4.0.0",
     "discord.js": "^14.19.3",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "node-cron": "^4.0.5"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.1.10"
   }
 }
