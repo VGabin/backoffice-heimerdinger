@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS jobs (
   type VARCHAR(50) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'pending',
   scheduled_at TIMESTAMP NULL,
-  discord_id VARCHAR(30) NOT NULL,
+  stripe_id VARCHAR(255) NOT NULL,
+  transaction_id VARCHAR(255) NOT NULL,
+  discord_id VARCHAR(255),
   try_count INT DEFAULT 0,
-  role VARCHAR(30) NOT NULL,
-  payload JSON
+  role VARCHAR(30) NOT NULL
 );

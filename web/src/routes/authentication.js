@@ -29,16 +29,14 @@ router.get("/callback", async (req, res) => {
     req.session.user = userRes.data;
     res.redirect("/");
   } catch (err) {
-    console.error(err);
-    res.send("Erreur :" + err.message);
+    res.send(err.message);
   }
 });
 
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error(err);
-      return res.send("Erreur pendant la déconnexion.");
+      return res.send(err.message);
     }
     res.redirect("/");
   });

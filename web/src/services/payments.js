@@ -22,13 +22,6 @@ async function savePayment(
   ]);
 }
 
-async function findLatestPaymentByDiscordId(discordId) {
-  const sql = `SELECT * FROM payments WHERE discord_id = ? AND status = 'paid' ORDER BY stripe_timestamp DESC LIMIT 1`;
-  const [rows] = await db.query(sql, [discordId]);
-  return rows[0] || null;
-}
-
 module.exports = {
-  savePayment,
-  findLatestPaymentByDiscordId,
+  savePayment
 };
