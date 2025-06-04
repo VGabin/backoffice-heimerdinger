@@ -7,7 +7,7 @@ async function createJob(type, status, scheduledAt, discordId, role, stripe_id, 
 }
 
 async function findJobAssignRoleByDiscordId(discordId) {
-  const sql = `SELECT * FROM jobs WHERE discord_id = ? AND type = 'assign_role' AND status in ('pending', 'processing') AND scheduled_at <= NOW()`;
+  const sql = `SELECT * FROM jobs WHERE discord_id = ? AND type = 'assign_role' AND status in ('success', 'pending', 'processing') AND scheduled_at <= NOW()`;
   const [rows] = await db.query(sql, [discordId]);
   return rows[0] || null;
 }
