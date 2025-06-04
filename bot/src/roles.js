@@ -1,26 +1,26 @@
-const onJoin = async (user) => {
+const roleAttribution = async (user) => {
   try {
     const joiningUser = user.user.username;
-    const url = "https://workshop.ceticy.fr/api/join?discordId=" + joiningUser;
+    const url = process.env.APP_URL + "api/join?discordId=" + joiningUser;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Erreur HTTP: " + response.status);
     }
     const data = await response.json();
-    console.log("Données reçues :", data);
+    giveRole(user, data.role);
   } catch (error) {
     console.error("Erreur :", error);
   }
 };
 
-const giveRole = (user) => {
+const giveRole = (user, newRole) => {
   try {
     const userRoles = user.roles.cache.map((role) => role.name);
 
     // A remplacer le string quand on pourra récupérer l'info
-    const wantedRole = user.guild.roles.cache.find((r) => r.name === "basique");
+    const wantedRole = user.guild.roles.cache.find((r) => r.name === newRole);
 
-    if (!userRoles.includes(wantedRole)) {
+    if (wantedRole && !userRoles.includes(wantedRole)) {
       user.roles.add(wantedRole);
     }
   } catch (error) {
@@ -102,4 +102,4 @@ const checkRoles = async (client) => {
   }
 };
 
-module.exports = { giveRole, removeRoles, onJoin, checkRoles };
+module.exports = { giveRole, removeRoles, roleAttribution, checkRoles };

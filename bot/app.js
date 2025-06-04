@@ -6,7 +6,7 @@ const {
   Routes,
   SlashCommandBuilder,
 } = require("discord.js");
-const { giveRole, removeRoles, onJoin, checkRoles } = require("./src/roles");
+const { giveRole, removeRoles, roleAttribution, checkRoles } = require("./src/roles");
 
 const client = new Client({
   intents: [
@@ -55,7 +55,7 @@ client.once("ready", () => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-  await onJoin(member);
+  await roleAttribution(member);
 });
 
 // Event : réponse à la commande slash
@@ -77,9 +77,9 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 // Event : voir tous les messages
-client.on("messageCreate", (message) => {
-  if (message.author.bot) return;
-  console.log(`📨 ${message.author.tag} a envoyé : ${message.content}`);
-});
+// client.on("messageCreate", (message) => {
+//   if (message.author.bot) return;
+//   console.log(`📨 ${message.author.tag} a envoyé : ${message.content}`);
+// });
 
 client.login(process.env.DISCORD_TOKEN);

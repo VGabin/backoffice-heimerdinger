@@ -22,6 +22,13 @@ async function savePayment(
   ]);
 }
 
+async function getAllLastestPayments() {
+  const sql = `SELECT * FROM payments ORDER BY stripe_timestamp DESC;`;
+  const [rows] = await db.query(sql);
+  return rows || null;
+}
+
 module.exports = {
-  savePayment
+  savePayment,
+  getAllLastestPayments,
 };
