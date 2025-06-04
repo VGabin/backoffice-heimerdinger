@@ -1,8 +1,8 @@
-const {
-  savePayment,
-} = require("../services/payments");
+const { savePayment } = require("../services/payments");
+const { createJob } = require("../services/jobs");
+const { getRoleFromAmount } = require("../utils/data");
 
-async function stripeEventHandlers (event) {
+async function stripeEventHandlers(event) {
   const type = event.type;
 
   switch (type) {
@@ -16,15 +16,45 @@ async function stripeEventHandlers (event) {
       const timestamp = new Date(session.created * 1000);
       const status = session.payment_status || "paid";
 
-      return savePayment(
-        type,
-        stripeId,
-        transactionId,
-        discordId,
-        amount,
-        timestamp,
-        status
-      );
+      try {
+        await savePayment(
+          type,
+          stripeId,
+          transactionId,
+          discordId,
+          amount,
+          timestamp,
+          status
+        );
+
+        let role = getRoleFromAmount(amount);
+
+        // Job to assign role
+        await createJob(
+          "assign_role",
+          "pending",
+          timestamp,
+          discordId,
+          role,
+          stripeId,
+          transactionId
+        );
+
+        // Program to delete role after 30 days
+        await createJob(
+          "remove_role",
+          "scheduled",
+          new Date(timestamp.getTime() + 30 * 24 * 60 * 60 * 1000),
+          discordId,
+          role,
+          stripeId,
+          transactionId
+        );
+      } catch (err) {
+        console.error(err);
+      }
+
+      break;
     }
   }
 
