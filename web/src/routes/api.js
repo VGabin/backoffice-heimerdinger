@@ -51,7 +51,7 @@ router.get("/join", async (req, res) => {
     const hasJob = await findJobAssignRoleByDiscordId(discordId);
 
     if (!hasJob) {
-      return res.status(404).json({ error: "Aucune tâche trouvée pour cet utilisateur" });
+      return res.status(204).json({ error: "Aucune tâche trouvée pour cet utilisateur" });
     }
 
     await updateJobStatusById(hasJob.id, "success");
@@ -71,7 +71,24 @@ router.get("/jobs", async (req, res) => {
       await updateJobStatusById(job.id, "processing");
     });
 
-    return res.status(404).json(jobs);
+    return res.status(200).json(jobs);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/done", async (req, res) => {
+  const { jobId } = req.query;
+
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Discord ID is required" });
+  }
+
+  try {
+    await updateJobStatusById(jobId, "success");
+
+    return res.status(200).json({ statut: "done" });
   } catch (error) {
     res.status(500).json(error);
   }
