@@ -6,7 +6,13 @@ const {
   findJobAssignRoleByDiscordId,
   updateJobStatusById,
   getAllJobsToDo,
+  updateJobsDiscordId,
+  updateJobsDate,
 } = require("../services/jobs");
+
+const {
+  updatePaymentsDiscordId,
+} = require("../services/payments");
 
 // Webhook Stripe on payment success
 router.post(
@@ -85,7 +91,7 @@ router.post("/done", async (req, res) => {
 
 
   if (!jobId) {
-    return res.status(400).json({ error: "Discord ID is required" });
+    return res.status(400).json({ error: "Job ID is required" });
   }
 
   try {
@@ -95,6 +101,30 @@ router.post("/done", async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
+});
+
+router.post("/update", async (req, res) => {
+  const { oldDiscordId, oldDate } = req.query;
+  const { newDiscordId, newDate } = req.body;
+
+  if (!oldDiscordId || !newDiscordId || !oldDate || !newDate) {
+    return res.status(400).send("Paramètres manquants");
+  }
+
+  try {
+    await updateJobsDiscordId(oldDiscordId, newDiscordId);
+    await updatePaymentsDiscordId(oldDiscordId, newDiscordId);
+
+    const formatToDateOnly = (d) => new Date(d).toISOString().slice(0, 10);
+
+    if (formatToDateOnly(oldDate) !== formatToDateOnly(newDate)) {
+      await updateJobsDate(newDiscordId, newDate, new Date());
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+
+  res.redirect("/abonnements");
 });
 
 module.exports = router;

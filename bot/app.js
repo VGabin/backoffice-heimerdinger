@@ -42,7 +42,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 client.once("ready", () => {
   console.log(`✅ Connecté en tant que ${client.user.tag}`);
 
-  cron.schedule('0 8 * * *', async () => {
+  cron.schedule('* * * * *', async () => {
     await checkRoles(client);
   });
 });

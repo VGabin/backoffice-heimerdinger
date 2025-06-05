@@ -4,6 +4,7 @@ const session = require("express-session");
 const { getAllLastestPayments } = require("./src/services/payments")
 const { getAllSubscriptions } = require("./src/services/subscriptions")
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 const authenticationRoutes = require("./src/routes/authentication");
 const apiRoutes = require("./src/routes/api");

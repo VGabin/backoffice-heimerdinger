@@ -28,7 +28,13 @@ async function getAllLastestPayments() {
   return rows || null;
 }
 
+async function updatePaymentsDiscordId(oldDiscordId, newDiscordId) {
+  const sql = `UPDATE payments SET discord_id = ? WHERE discord_id = ?`;
+  await db.query(sql, [newDiscordId, oldDiscordId]);
+}
+
 module.exports = {
   savePayment,
   getAllLastestPayments,
+  updatePaymentsDiscordId,
 };

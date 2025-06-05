@@ -74,17 +74,29 @@ html
                 th ID Discord
                 th Type d'abonnement
                 th Statut
+                th Traitement
                 th ID Stripe
                 th Date de fin
+                th Action
             tbody
               each subscription in subscriptions
-                tr
-                  td= subscription.discord_id
-                  td= subscription.role
-                  td= subscription.status
-                  td= subscription.stripe_id
-                  - const date = new Date(subscription.scheduled_at)
-                  - const formatted = date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-                  td= formatted
+                - const date = new Date(subscription.scheduled_at)
+                - const formatted = date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                - const datetimeInput = date.toISOString().slice(0, 16) // pour input[type=datetime-local]
+                - const bgColor = subscription.type === 'assign_role' ? 'rgba(0, 255, 0, 0.4)' : subscription.type === 'remove_role' ? 'rgba(255, 0, 0, 0.4)' : 'rgba(0, 0, 255, 0.4)'
+                - const subType = subscription.type === 'assign_role' ? 'Actif' : subscription.type === 'remove_role' ? 'Inactif' : 'Anomalie'
+                - const now = new Date().toISOString().slice(0, 16)
+                tr(style=`background-color: ${bgColor}`)
+                  form(method="POST", action=`/api/update?oldDiscordId=${subscription.discord_id}&oldDate=${encodeURIComponent(subscription.scheduled_at)}`)
+                    td
+                      input(type="text", name="newDiscordId", value=subscription.discord_id)
+                    td= subscription.role
+                    td= subType
+                    td= subscription.status
+                    td= subscription.stripe_id
+                    td
+                      input(type="datetime-local", name="newDate", value=datetimeInput)
+                    td
+                      button(type="submit") Modifier
 
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js')

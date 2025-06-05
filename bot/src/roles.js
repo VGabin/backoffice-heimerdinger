@@ -20,7 +20,7 @@ const giveRole = (user, newRole) => {
     const userRoles   = user.roles.cache.map((role) => role.name);
     const wantedRole  = user.guild.roles.cache.find((r) => r.name === newRole);
 
-    if (wantedRole && !userRoles.includes(newRole)) {
+    if (wantedRole) {
       user.roles.add(wantedRole);
 
       return true;

@@ -22,6 +22,18 @@ async function updateJobStatusById(jobId, status) {
   await db.query(sql, [status, jobId]);
 }
 
+async function updateJobsDiscordId(oldDiscordId, newDiscordId) {
+  const sql = `UPDATE jobs SET discord_id = ? WHERE discord_id = ?`;
+  await db.query(sql, [newDiscordId, oldDiscordId]);
+}
+
+async function updateJobsDate(discordId, newDate, today) {
+  let sql = `UPDATE jobs SET scheduled_at = ?, status = "scheduled" WHERE discord_id = ? AND type = "remove_role";`;
+  await db.query(sql, [newDate, discordId]);
+  sql = `UPDATE jobs SET scheduled_at = ?, status = "processing" WHERE discord_id = ? AND type = "assign_role";`;
+  await db.query(sql, [today, discordId]);
+}
+
 async function getAllJobsToDo() {
   const sql = `SELECT id, type, discord_id, role FROM jobs WHERE status in ('pending', 'processing', 'scheduled') AND scheduled_at >= CURDATE() AND scheduled_at < CURDATE() + INTERVAL 1 DAY`;
   const [rows] = await db.query(sql);
@@ -34,4 +46,6 @@ module.exports = {
   findJobAssignRoleByDiscordId,
   updateJobStatusById,
   getAllJobsToDo,
+  updateJobsDiscordId,
+  updateJobsDate,
 };
