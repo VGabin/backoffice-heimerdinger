@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
-const { getRoleFromAmount } = require("../utils/data");
-const stripeEventHandlers = require("../controllers/stripe");
+const stripeEventHandlers = require("../services/stripe");
 const {
   findJobAssignRoleByDiscordId,
   updateJobStatusById,
@@ -15,6 +14,10 @@ router.post(
   express.raw({ type: "application/json" }),
   async (req, res) => {
     const sig = req.headers["stripe-signature"];
+
+    if (!sig) {
+      return res.status(400).send("Signature manquante");
+    }
 
     let event;
     try {
