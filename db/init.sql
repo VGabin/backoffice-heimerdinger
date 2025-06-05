@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS payments (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   type VARCHAR(50) NOT NULL,
   status VARCHAR(50) NOT NULL,
-  stripe_timestamp TIMESTAMP NOT NULL,
+  stripe_timestamp TIMESTAMP NULL,
   stripe_id VARCHAR(255) NOT NULL,
   transaction_id VARCHAR(255) NOT NULL,
   discord_id VARCHAR(255),

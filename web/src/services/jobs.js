@@ -6,8 +6,13 @@ async function createJob(type, status, scheduledAt, discordId, role, stripe_id, 
   await db.query(sql, [type, status, scheduledAt, discordId, role, stripe_id, transaction_id]);
 }
 
+async function updateJobByDiscordId(discordId, scheduledAt) {
+  const sql = `UPDATE jobs SET scheduled_at = ? WHERE discord_id = ?`;
+  await db.query(sql, [scheduledAt, discordId]);
+}
+
 async function findJobAssignRoleByDiscordId(discordId) {
-  const sql = `SELECT * FROM jobs WHERE discord_id = ? AND type = 'assign_role' AND status in ('success', 'pending', 'processing') AND scheduled_at <= NOW()`;
+  const sql = `SELECT * FROM jobs WHERE discord_id = ? AND scheduled_at <= NOW() ORDER BY id DESC LIMIT 1`;
   const [rows] = await db.query(sql, [discordId]);
   return rows[0] || null;
 }
@@ -25,6 +30,7 @@ async function getAllJobsToDo() {
 
 module.exports = {
   createJob,
+  updateJobByDiscordId,
   findJobAssignRoleByDiscordId,
   updateJobStatusById,
   getAllJobsToDo,

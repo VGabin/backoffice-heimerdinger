@@ -54,9 +54,9 @@ router.get("/join", async (req, res) => {
       return res.status(204).json({ error: "Aucune tâche trouvée pour cet utilisateur" });
     }
 
-    await updateJobStatusById(hasJob.id, "success");
+    await updateJobStatusById(hasJob.id, "processing");
 
-    return res.status(200).json({ role: hasJob.role });
+    return res.status(200).json({type: hasJob.type, role: hasJob.role});
   } catch (error) {
     res.status(500).json(error);
   }
