@@ -1,5 +1,5 @@
-const { savePayment } = require("../services/payments");
-const { createJob, updateJobByDiscordId } = require("../services/jobs");
+const { savePayment } = require("./payments");
+const { createJob, updateJobByDiscordId } = require("./jobs");
 const { getRoleFromAmount } = require("../utils/data");
 
 async function stripeEventHandlers(event) {
