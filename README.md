@@ -8,6 +8,7 @@ Le tout est orchestré via **Docker Compose**, avec deux environnements : dével
 
 ## 📁 Structure du projet
 
+```plaintext
 .
 ├── bot/              # Bot Discord en Node.js (discord.js)
 ├── db/               # Fichiers SQL d'initialisation de la base de données
@@ -15,6 +16,7 @@ Le tout est orchestré via **Docker Compose**, avec deux environnements : dével
 ├── compose.yml       # Docker Compose pour développement
 ├── compose-prod.yml  # Docker Compose pour production (avec Traefik)
 └── .env.sample       # Exemple de configuration environnement
+```
 
 ---
 
